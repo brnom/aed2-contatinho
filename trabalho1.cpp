@@ -11,8 +11,21 @@ typedef map<string,int> Dicio;
  * - caso nao exista, imprimir "Contatinho nao encontrado"
 */
 int PesquisaContato(Dicio &cont, string _nam){
-     
-    return 1;
+    Dicio::iterator itr;
+
+    // se lista estiver vazia, retorna -1
+    if(cont.begin() == cont.end()){
+        return -1;
+    }
+
+    // procura e se achar, retorna telefone
+    for (itr = cont.begin(); itr != cont.end(); ++itr){
+        if((itr->first).compare(_nam)==0)
+            return itr->second;
+    }
+
+    // se nao achou, retorna 0
+    return 0;
 }
 
 /* Requesitos:
@@ -20,23 +33,32 @@ int PesquisaContato(Dicio &cont, string _nam){
  * - se for igual, imprimir "Contatinho ja inserido"
 */
 int InsereContato(Dicio &cont, string _nam, int _tel){
-    cont.insert(pair<string,int>(_nam, _tel));
-    return 1;
+
+    int comp=PesquisaContato(cont, _nam);
+
+    if(comp==0 || comp==-1){
+        //se nao achou, insere e retorna 1
+        cont.insert(pair<string,int>(_nam, _tel));
+        return 1;
+    }
+
+    //se deu ruim retorna 0
+    return 0;
+    
 }
 
 /* Requesitos:
  * - se nao existir contato, imprimir "Operacao invalida: contatinho nao encontrado"
 */
 int RemoveContato(Dicio &cont, string _nam){
-    return 1;
+    return 0;
 }
 
 /* Requesitos:
- * - se nao existir contato, imprimir 
- * - "Operacao invalida: contatinho nao encontrado"
+ * - se nao existir contato, imprimir "Operacao invalida: contatinho nao encontrado"
 */
 int AlteraContato(Dicio &cont, string _nam, int _tel){
-    return 1;
+    return 0;
 }
 
 
@@ -67,35 +89,42 @@ int main(int argc, char *argv[]){
         cin >> cmd;
         int flag=0;
 
-
+        //Insere 
         if(cmd.compare("I")==0){
             cin >> nam >> tel;
-
             flag = InsereContato(contatinhos, nam, tel);
-            if (flag == 1)
+
+            if (flag == 0)
                 cout << "contatinho ja inserido" << endl;
         }
+
+        //Pesquisa
         else if(cmd.compare("P")==0){
             cin >> nam;
-
             flag = PesquisaContato(contatinhos, nam);
-            if (flag == 1)
-                cout << "contatinho pesquisado" << endl;
+            
+            if (flag == -1 || flag ==0)
+                cout<<"Contatinho nao encontrado"<<endl;
+            else
+                cout <<"Contato encontrado: telefone "<< flag<<endl;
         }
+
         else if(cmd.compare("R")==0){
             cin >> nam;
-
             flag = RemoveContato(contatinhos, nam);
-            if (flag == 1)
+
+            if (flag == 0)
                 cout << "contatinho removido" << endl;
         }
+
         else if(cmd.compare("A")==0){
             cin >> nam >> tel;
-
             flag = AlteraContato(contatinhos, nam, tel);
-            if (flag == 1)
+
+            if (flag == 0)
                 cout << "contatinho alterado!" << endl;
         }
+
         /*
         else if(cmd.compare("Pr")==0){
             flag = ImprimeContato(contatinhos);
@@ -103,10 +132,13 @@ int main(int argc, char *argv[]){
                 cout<<"lista vazia baby.."<<endl;
 
         }*/
+
         else if(cmd.compare("0")==0)
             break;
+
         else
             cout<<"operacao inexistente!"<<endl;
+
     }
     
     
