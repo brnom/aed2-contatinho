@@ -98,7 +98,7 @@ int main(int argc, char *argv[]){
             flag = InsereContato(contatinhos, nam, tel);
 
             if (flag == 0)
-                cout << "contatinho ja inserido" << endl;
+                cout << "Contatinho ja inserido" << endl;
         }
 
         //Pesquisa
@@ -132,14 +132,6 @@ int main(int argc, char *argv[]){
 
         else if(cmd.compare("0")==0)
             break;
-
-        else
-            cout<<"operacao inexistente!"<<endl;
-
     }
-    
-    
-
-
     return 0;
 }
