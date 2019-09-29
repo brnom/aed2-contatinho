@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
-#include <map>
+#include <unordered_map>
 
 using namespace std;
 
-typedef map<string,int> Dicio;
+typedef unordered_map<string,int> Dicio;
 
 /* Requesitos:
  * - se existir contato, imprimir "Contatinho encontrado: telefone _tel"
