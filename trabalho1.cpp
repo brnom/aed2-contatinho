@@ -109,7 +109,7 @@ int main(int argc, char *argv[]){
             if (flag == -1 || flag ==0)
                 cout<<"Contatinho nao encontrado"<<endl;
             else
-                cout <<"Contato encontrado: telefone "<< flag<<endl;
+                cout <<"Contatinho encontrado: telefone "<< flag<<endl;
         }
 
         //Remove
