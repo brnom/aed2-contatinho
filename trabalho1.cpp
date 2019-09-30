@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <vector>
+#include <sstream>
 
 using namespace std;
 
@@ -32,13 +34,15 @@ int PesquisaContato(Dicio &cont, string _nam){
  * - nao inserir pessoas com nomes iguais
  * - se for igual, imprimir "Contatinho ja inserido"
 */
-int InsereContato(Dicio &cont, string _nam, int _tel){
+int InsereContato(Dicio &cont, string _nam, string _tel){
+
+    int _t=stoi(_tel);
 
     int comp=PesquisaContato(cont, _nam);
 
     if(comp==0 || comp==-1){
         //se nao achou, insere e retorna 1
-        cont.insert(pair<string,int>(_nam, _tel));
+        cont.insert(pair<string,int>(_nam, _t));
         return 1;
     }
 
@@ -64,14 +68,16 @@ int RemoveContato(Dicio &cont, string _nam){
 /* Requesitos:
  * - se nao existir contato, imprimir "Operacao invalida: contatinho nao encontrado"
 */
-int AlteraContato(Dicio &cont, string _nam, int _tel){
+int AlteraContato(Dicio &cont, string _nam, string _tel){
 
     Dicio::iterator itr;
+
+    int _t=stoi(_tel);
 
     // procura e se achar, altera telefone
     for (itr = cont.begin(); itr != cont.end(); ++itr){
         if((itr->first).compare(_nam)==0){
-            itr->second=_tel;
+            itr->second=_t;
             return 1;
         }
     }
@@ -79,32 +85,44 @@ int AlteraContato(Dicio &cont, string _nam, int _tel){
     return 0;
 }
 
+vector<string> corta(const string& s, char delimita){
+    vector<string> tokens;
+    string tok;
+    istringstream algo(s);
+    while(getline(algo, tok, delimita)){
+        tokens.push_back(tok);
+    }
+    return tokens;
+}
 
 
 int main(int argc, char *argv[]){
 
-    string cmd, nam;
-    int tel;
+    
+    string all;
     Dicio contatinhos;
+    int flag;
 
     while (1){
         //cout << "entrada:: ";
-        cin >> cmd;
-        int flag=0;
+        getline(cin, all);
+        flag=0;
+        vector<string> args;
+
+        //Tratamento de dados
+        args=corta(all, ' ');
 
         //Insere 
-        if(cmd.compare("I")==0){
-            cin >> nam >> tel;
-            flag = InsereContato(contatinhos, nam, tel);
+        if(args[0].compare("I")==0){
+            flag = InsereContato(contatinhos, args[1], args[2]);
 
             if (flag == 0)
                 cout << "Contatinho ja inserido" << endl;
         }
 
         //Pesquisa
-        else if(cmd.compare("P")==0){
-            cin >> nam;
-            flag = PesquisaContato(contatinhos, nam);
+        else if(args[0].compare("P")==0){
+            flag = PesquisaContato(contatinhos, args[1]);
             
             if (flag == -1 || flag ==0)
                 cout<<"Contatinho nao encontrado"<<endl;
@@ -113,24 +131,22 @@ int main(int argc, char *argv[]){
         }
 
         //Remove
-        else if(cmd.compare("R")==0){
-            cin >> nam;
-            flag = RemoveContato(contatinhos, nam);
+        else if(args[0].compare("R")==0){
+            flag = RemoveContato(contatinhos, args[1]);
 
             if (flag == 0)
                 cout << "Operacao invalida: contatinho nao encontrado" << endl;
         }
 
         //Altera
-        else if(cmd.compare("A")==0){
-            cin >> nam >> tel;
-            flag = AlteraContato(contatinhos, nam, tel);
+        else if(args[0].compare("A")==0){
+            flag = AlteraContato(contatinhos, args[1], args[2]);
 
             if (flag == 0)
                 cout << "Operacao invalida: contatinho nao encontrado" << endl;
         }
 
-        else if(cmd.compare("0")==0)
+        else if(args[0].compare("0")==0)
             break;
     }
     return 0;
