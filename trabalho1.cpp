@@ -12,77 +12,77 @@ typedef unordered_map<string,int> Dicio;
  * - se existir contato, imprimir "Contatinho encontrado: telefone _tel"
  * - caso nao exista, imprimir "Contatinho nao encontrado"
 */
-int PesquisaContato(Dicio &cont, string _nam){
+void PesquisaContato(Dicio &cont, string _nam){
     Dicio::iterator itr;
-
-    // se lista estiver vazia, retorna -1
-    if(cont.begin() == cont.end()){
-        return -1;
-    }
-
-    // procura e se achar, retorna telefone
+    
+    // procura e se achar, printa telefone
     for (itr = cont.begin(); itr != cont.end(); ++itr){
-        if((itr->first).compare(_nam)==0)
-            return itr->second;
+        if((itr->first).compare(_nam)==0){
+            cout <<"Contatinho encontrado: telefone "<< itr->second <<endl;
+            return;
+        }
     }
 
-    // se nao achou, retorna 0
-    return 0;
+    // se nao achou, printa aq
+    cout<<"Contatinho nao encontrado"<<endl;
 }
 
 /* Requesitos:
  * - nao inserir pessoas com nomes iguais
  * - se for igual, imprimir "Contatinho ja inserido"
 */
-int InsereContato(Dicio &cont, string _nam, string _tel){
-
-    int _t=stoi(_tel);
-
-    int comp=PesquisaContato(cont, _nam);
-
-    if(comp==0 || comp==-1){
-        //se nao achou, insere e retorna 1
-        cont.insert(pair<string,int>(_nam, _t));
-        return 1;
-    }
-
-    //se deu ruim retorna 0
-    return 0;
-    
-}
-
-/* Requesitos:
- * - se nao existir contato, imprimir "Operacao invalida: contatinho nao encontrado"
-*/
-int RemoveContato(Dicio &cont, string _nam){
-    
-    int comp=PesquisaContato(cont, _nam);
-    if(comp==0 || comp==-1){
-        //se nao achou, retorna 0
-        return 0;
-    }
-    cont.erase(_nam);
-    return 1;
-}
-
-/* Requesitos:
- * - se nao existir contato, imprimir "Operacao invalida: contatinho nao encontrado"
-*/
-int AlteraContato(Dicio &cont, string _nam, string _tel){
+void InsereContato(Dicio &cont, string _nam, int _tel){
 
     Dicio::iterator itr;
+    
+    // procura e se achar, printa telefone
+    for (itr = cont.begin(); itr != cont.end(); ++itr){
+        if((itr->first).compare(_nam)==0){
+            cout << "Contatinho ja inserido" << endl;
+            return;
+        }
+    }
 
-    int _t=stoi(_tel);
+    //se nao achou, insere
+    cont.insert(pair<string,int>(_nam, _tel));
+
+    
+}
+
+/* Requesitos:
+ * - se nao existir contato, imprimir "Operacao invalida: contatinho nao encontrado"
+*/
+void RemoveContato(Dicio &cont, string _nam){
+    
+    Dicio::iterator itr;
+    
+    // procura e se achar, apaga
+    for (itr = cont.begin(); itr != cont.end(); ++itr){
+        if((itr->first).compare(_nam)==0){
+            cont.erase(_nam);
+            return;
+        }
+    }
+    
+    cout << "Operacao invalida: contatinho nao encontrado" <<endl;
+}
+
+/* Requesitos:
+ * - se nao existir contato, imprimir "Operacao invalida: contatinho nao encontrado"
+*/
+void AlteraContato(Dicio &cont, string _nam, int _tel){
+
+    Dicio::iterator itr;
 
     // procura e se achar, altera telefone
     for (itr = cont.begin(); itr != cont.end(); ++itr){
         if((itr->first).compare(_nam)==0){
-            itr->second=_t;
-            return 1;
+            itr->second=_tel;
+            return;
         }
     }
 
-    return 0;
+    cout << "Operacao invalida: contatinho nao encontrado" <<endl;
 }
 
 vector<string> corta(const string& s, char delimita){
@@ -97,57 +97,41 @@ vector<string> corta(const string& s, char delimita){
 
 
 int main(int argc, char *argv[]){
-
     
-    string all;
     Dicio contatinhos;
-    int flag;
 
     while (1){
         //cout << "entrada:: ";
+        int number=0;
+        string all;
         getline(cin, all);
-        flag=0;
-        vector<string> args;
+    
 
         //Tratamento de dados
+        vector<string> args;
         args=corta(all, ' ');
+        if(args.size()==3)
+            number=stoi(args[2]);
 
         //Insere 
-        if(args[0].compare("I")==0){
-            flag = InsereContato(contatinhos, args[1], args[2]);
-
-            if (flag == 0)
-                cout << "Contatinho ja inserido" << endl;
-        }
+        if(args[0].compare("I")==0)
+            InsereContato(contatinhos, args[1], number);                
 
         //Pesquisa
-        else if(args[0].compare("P")==0){
-            flag = PesquisaContato(contatinhos, args[1]);
-            
-            if (flag == -1 || flag ==0)
-                cout<<"Contatinho nao encontrado"<<endl;
-            else
-                cout <<"Contatinho encontrado: telefone "<< flag<<endl;
-        }
+        else if(args[0].compare("P")==0)
+            PesquisaContato(contatinhos, args[1]);                
 
         //Remove
-        else if(args[0].compare("R")==0){
-            flag = RemoveContato(contatinhos, args[1]);
-
-            if (flag == 0)
-                cout << "Operacao invalida: contatinho nao encontrado" << endl;
-        }
+        else if(args[0].compare("R")==0)
+            RemoveContato(contatinhos, args[1]);
 
         //Altera
-        else if(args[0].compare("A")==0){
-            flag = AlteraContato(contatinhos, args[1], args[2]);
+        else if(args[0].compare("A")==0)
+            AlteraContato(contatinhos, args[1], number);
 
-            if (flag == 0)
-                cout << "Operacao invalida: contatinho nao encontrado" << endl;
-        }
-
+        //Para
         else if(args[0].compare("0")==0)
-            break;
+            return 0;
     }
     return 0;
 }
